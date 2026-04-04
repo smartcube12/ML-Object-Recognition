@@ -10,7 +10,7 @@ RUN pip install pandas numpy matplotlib keras tensorflow
 
 # Copy python scripts into Docker container
 #COPY utils.py /app/
-COPY script.py /app/  
+COPY Convo-model.py /app/  
 
 # Create directory for output
 RUN mkdir input
@@ -20,4 +20,4 @@ RUN mkdir output
 #ENTRYPOINT ["python", "script.py"]
 # provide command line args
 #CMD [args]
-CMD ["python", "Convo_model.py"]
+CMD ["python", "Convo-model.py"]
