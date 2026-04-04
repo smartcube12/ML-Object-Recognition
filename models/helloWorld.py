@@ -59,5 +59,5 @@ CNN.summary()
 
 print("Hello, world 2")
 f = open("output/newFileOutput.txt", "w")
-f.write("HelloWorld")
+f.write("Hello World")
 f.close()
