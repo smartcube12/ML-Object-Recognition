@@ -7,17 +7,8 @@ WORKDIR /app
 # Use pip to install required python packages
 RUN pip install pandas numpy matplotlib keras tensorflow
 
-
-# Copy python scripts into Docker container
-#COPY utils.py /app/
-COPY script.py /app/  
-
-# Create directory for output
-RUN mkdir input
-RUN mkdir output
-
 # command to run python script
 #ENTRYPOINT ["python", "script.py"]
 # provide command line args
 #CMD [args]
-CMD ["python", "Convo_model.py"]
+CMD ["python", "helloWorld.py"]

@@ -1,7 +1,6 @@
 import sys
 import tensorflow as tf
-from keras import layers
-#import keras as keras?
+import keras as keras
 import numpy as np
 import pandas as pd
 import os
@@ -59,3 +58,6 @@ CNN.summary()
 
 
 print("Hello, world 2")
+f = open("output/newFileOutput.txt", "w")
+f.write("HelloWorld")
+f.close()
