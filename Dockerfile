@@ -5,12 +5,12 @@ FROM python:3.12.13
 WORKDIR /app
 
 # Use pip to install required python packages
-RUN pip install pandas numpy matplotlib
+RUN pip install pandas numpy matplotlib keras tensorflow
 
 
 # Copy python scripts into Docker container
 #COPY utils.py /app/
-COPY Convo-model.py /app/  
+COPY script.py /app/  
 
 # Create directory for output
 RUN mkdir output
