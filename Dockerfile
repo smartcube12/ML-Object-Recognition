@@ -12,3 +12,6 @@ RUN pip install pandas numpy matplotlib keras tensorflow
 # provide command line args
 #CMD [args]
 CMD ["python", "helloWorld.py"]
+
+# Code to run this docker container, once built
+# docker run --rm -v ./input:/app/input  -v ./output:/app/output -v ./models:/app  <container-name>
