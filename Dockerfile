@@ -7,16 +7,13 @@ WORKDIR /app
 # Use pip to install required python packages
 RUN pip install pandas numpy matplotlib
 
-# Copy Training data into docker container
-COPY ./test/ /app/
-COPY ./train/ /app/
 
 # Copy python scripts into Docker container
 #COPY utils.py /app/
-#COPY script.py /app/  
+COPY Convo-model.py /app/  
 
-# Create data directory for output
-RUN mkdir data
+# Create directory for output
+RUN mkdir output
 
 # command to run python script
 #ENTRYPOINT ["python", "script.py"]
