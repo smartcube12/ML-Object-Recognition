@@ -1,7 +1,7 @@
 import sys
 import tensorflow as tf
 from keras import layers
-#import keras as keras?
+import keras as keras
 import numpy as np
 import pandas as pd
 import os
@@ -10,7 +10,7 @@ os.environ["KERAS_BACKEND"] = "tensorflow"
 
 
 #----fetching data----- (may be another file)
-
+#TODO
 
 # -------Defining the model ------------ 
 
@@ -31,7 +31,7 @@ CNN.summary()
 
 
 # -------Training the model ------------ Table 6.4.3
-
+#TODO
 # model.compile(
 #     #all are example choices use is not required
 #     optimizer = "rmsprop",
@@ -49,6 +49,7 @@ CNN.summary()
 
 
 # -------Evaluating the model ------------ 
+#TODO
 #results = model.evaluate(Xtest, ytest, batch_size=64)
 #print("Test loss, accuracy", results)
 # predictions = model.predict(Xtest[:3])
@@ -58,4 +59,4 @@ CNN.summary()
 
 
 
-print("Hello, world 2")
+print("Congrats it works")

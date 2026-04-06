@@ -11,6 +11,7 @@ RUN pip install pandas numpy matplotlib keras tensorflow
 # Copy python scripts into Docker container
 #COPY utils.py /app/
 COPY Convo-model.py /app/  
+COPY possibly_better_labels.csv /app/  
 
 # Create directory for output
 RUN mkdir input

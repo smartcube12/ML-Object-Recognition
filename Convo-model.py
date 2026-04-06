@@ -1,15 +1,31 @@
 import sys
 import tensorflow as tf
-from keras import layers
+from keras import layers, datasets
 import keras as keras
 import numpy as np
 import pandas as pd
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 #here they would have scikit and import train_test_split i dont think we need it
 
 
 #----fetching data----- (may be another file)
+#TODO
+
+trainCSV = pd.read_csv("possibly_better_labels.csv")
+print(trainCSV.head()))
+Training = tf.keras.preprocessing.image_dataset_from_directory(
+    "input/train",
+    image_size=(32,32),
+    batch_size=50000
+)
+
+Testing = tf.keras.preprocessing.image_dataset_from_directory(
+    "input/test",
+    image_size=(32,32),
+    batch_size=300000
+)
 
 
 # -------Defining the model ------------ 
@@ -31,7 +47,7 @@ CNN.summary()
 
 
 # -------Training the model ------------ Table 6.4.3
-
+#TODO
 # model.compile(
 #     #all are example choices use is not required
 #     optimizer = "rmsprop",
@@ -49,6 +65,7 @@ CNN.summary()
 
 
 # -------Evaluating the model ------------ 
+#TODO
 #results = model.evaluate(Xtest, ytest, batch_size=64)
 #print("Test loss, accuracy", results)
 # predictions = model.predict(Xtest[:3])
