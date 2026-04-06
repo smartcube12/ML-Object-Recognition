@@ -1,16 +1,34 @@
 import sys
 import tensorflow as tf
-from keras import layers
+from keras import layers, datasets
 import keras as keras
 import numpy as np
 import pandas as pd
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 #here they would have scikit and import train_test_split i dont think we need it
 
 
 #----fetching data----- (may be another file)
-#TODO
+
+trainCSV = pd.read_csv("possibly_better_labels.csv")
+
+print(trainCSV.head())  #Testing if w are reading training labels
+#----separating data-----
+
+Training = tf.keras.preprocessing.image_dataset_from_directory(
+    "input/train",
+    image_size=(32,32),
+    batch_size=50000
+)
+
+Testing = tf.keras.preprocessing.image_dataset_from_directory(
+    "input/test",
+    image_size=(32,32),
+    batch_size=300000
+)
+
 
 # -------Defining the model ------------ 
 
@@ -59,4 +77,4 @@ CNN.summary()
 
 
 
-print("Congrats it works")
+print("Everything has run :)")

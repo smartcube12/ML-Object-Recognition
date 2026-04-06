@@ -14,7 +14,10 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 #TODO
 
 trainCSV = pd.read_csv("possibly_better_labels.csv")
-print(trainCSV.head()))
+
+# print(trainCSV.head())  #Testing if w are reading training labels
+#----separating data----- (may be another file)
+
 Training = tf.keras.preprocessing.image_dataset_from_directory(
     "input/train",
     image_size=(32,32),
@@ -75,4 +78,4 @@ CNN.summary()
 
 
 
-print("Hello, world 2")
+print("Everything has run :)")
