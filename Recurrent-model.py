@@ -12,48 +12,16 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 
 #----fetching data----- (may be another file)
 
-
-
-# trainCSV = pd.read_csv("possibly_better_labels.csv")
-# trainCSV["filename"] = "input/train" + trainCSV["id"]
-# labels = trainCSV["label"].astype("category")
-# trainCSV["label_num"] = labels.cat.codes
-# filepaths = trainCSV["filename"].values
-# labels = trainCSV["label_num"].values
-
-# dataset = tf.data.Dataset.from_tensor_slices((filepaths, labels))
 (Xtrain, ytrain), (Xtest, ytest) = tf.keras.datasets.cifar10.load_data() 
 #^ our data is premade so we might not even have to load it oursleves just laod from the library
 
-#print(trainCSV.head(10))  #Testing if w are reading training labels
-
-#----separating data----- (may be another file)
-
-# Training = tf.keras.preprocessing.image_dataset_from_directory(
-#     "input/train",
-#     image_size=(32,32),
-#     batch_size=50000
-# )
-
-# Testing = tf.keras.preprocessing.image_dataset_from_directory(
-#     "input/test",
-#     image_size=(32,32),
-#     batch_size=300000
-# )
-
-# def load_image(path, label):
-#     img = tf.io.read_file(path)
-#     img = tf.image.decode_png(img, channels=3)
-#     img = tf.image.resize(img, (32, 32))
-#     img = img / 255.0
-#     return img, label
-
-# dataset = dataset.map(load_image).batch(32)
 
 # -------Defining the model ------------ 
 
 #From book these keras calls might need to be layers for our current import without 
 #line 4
+#TODO Rename all cnn to something else probably RCN
+
 CNN = keras.Sequential([
     keras.layers.Input(shape=(32, 32, 3)),
 
@@ -72,7 +40,6 @@ CNN.summary()
 
 
 # -------Training the model ------------ Table 6.4.3
-
 CNN.compile(
      optimizer = "adam",
      loss = "SparseCategoricalCrossentropy",
@@ -80,7 +47,7 @@ CNN.compile(
  )
 
 CNN.fit(Xtrain, ytrain, batch_size=128, epochs=18, validation_split=0.2)
-# ^ should be all we need
+
 
 # Can do the below code to help with evaluation but we could honnestly try the code below that 
 # Book says: training =model.fit(Xtrain, ytrain, batch_size=64, epochs=10) \n  training.history
@@ -88,7 +55,6 @@ CNN.fit(Xtrain, ytrain, batch_size=128, epochs=18, validation_split=0.2)
 
 
 # -------Evaluating the model ------------ 
-
 results = CNN.evaluate(Xtest, ytest, batch_size=128)
 print("Test loss, accuracy", results)
 predictions = CNN.predict(Xtest[:10])
