@@ -1,5 +1,6 @@
 import sys
 import tensorflow as tf
+import math
 from keras import layers, datasets
 from sklearn import metrics
 import keras as keras
@@ -41,7 +42,7 @@ RCN.compile(
      metrics=["accuracy"],
  )
 
-RCN.fit(Xtrain, ytrain, batch_size=256, epochs=20, validation_split=0.4)
+RCN.fit(Xtrain, ytrain, batch_size=256, epochs=1, validation_split=0.4)
 
 
 # Can do the below code to help with evaluation but we could honnestly try the code below that 
@@ -60,11 +61,18 @@ ytestForMatrix = ytest.flatten()
 print("Predictions:", predicted_classes)
 print("Actual values:", ytest[:10]) #We probably wont have an actual values since we don't have labels for test
 confusionMatrix = metrics.confusion_matrix(ytestForMatrix, pStats, normalize="pred")
-print(confusionMatrix)
+print("Confusion Matrix\n", confusionMatrix)
 print("accuracy:", metrics.accuracy_score(np.ravel(ytest), pStats))
 print("precision:", metrics.precision_score(ytest, pStats, average = "macro"))
 print("recall:", metrics.recall_score(ytest, pStats, average="macro"))
 print("kappa:", metrics.cohen_kappa_score(ytest, pStats))
 
+
+acc = metrics.accuracy_score(ytestForMatrix, pStats)
+n = len(ytestForMatrix)
+se = math.sqrt((acc * (1 - acc)) / n)
+lower = acc - 1.96 * se
+upper = acc + 1.96 * se
+print(f"95% Confidence Interval: ({lower:.4f}, {upper:.4f})")
 
 print("Everything has run :)")
