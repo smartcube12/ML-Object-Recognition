@@ -1,6 +1,7 @@
 import sys
 import tensorflow as tf
 from keras import layers, datasets
+from sklearn import metrics
 import keras as keras
 import numpy as np
 import pandas as pd
@@ -22,31 +23,25 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 #line 4
 #TODO Rename all cnn to something else probably RCN
 
-CNN = keras.Sequential([
-    keras.layers.Input(shape=(32, 32, 3)),
+Xtrain = Xtrain.reshape((-1, 32, 32*3))
+Xtest = Xtest.reshape((-1, 32, 32*3))
 
-    keras.layers.Conv2D(256, (3,3), activation="relu"),
-    keras.layers.MaxPooling2D(),
-
-    keras.layers.Conv2D(512, (3,3), activation="relu"),
-    keras.layers.MaxPooling2D(),
-
-    keras.layers.Flatten(),
-
-    keras.layers.Dense(256, activation="relu"),
+RCN = keras.Sequential([
+    keras.layers.Input(shape=(32, 96)),
+    keras.layers.LSTM(512),
     keras.layers.Dense(10, activation="softmax"),
 ])
-CNN.summary()
+RCN.summary()
 
 
 # -------Training the model ------------ Table 6.4.3
-CNN.compile(
+RCN.compile(
      optimizer = "adam",
      loss = "SparseCategoricalCrossentropy",
      metrics=["accuracy"],
  )
 
-CNN.fit(Xtrain, ytrain, batch_size=128, epochs=18, validation_split=0.2)
+RCN.fit(Xtrain, ytrain, batch_size=256, epochs=20, validation_split=0.4)
 
 
 # Can do the below code to help with evaluation but we could honnestly try the code below that 
@@ -55,14 +50,21 @@ CNN.fit(Xtrain, ytrain, batch_size=128, epochs=18, validation_split=0.2)
 
 
 # -------Evaluating the model ------------ 
-results = CNN.evaluate(Xtest, ytest, batch_size=128)
+results = RCN.evaluate(Xtest, ytest, batch_size=128)
 print("Test loss, accuracy", results)
-predictions = CNN.predict(Xtest[:10])
+predictions = RCN.predict(Xtest[:10])
+predictionsStats = RCN.predict(Xtest)
 predicted_classes = np.argmax(predictions, axis=1)
+pStats = np.argmax(predictionsStats, axis=1)
+ytestForMatrix = ytest.flatten()
 print("Predictions:", predicted_classes)
 print("Actual values:", ytest[:10]) #We probably wont have an actual values since we don't have labels for test
-
-
+confusionMatrix = metrics.confusion_matrix(ytestForMatrix, pStats, normalize="pred")
+print(confusionMatrix)
+print("accuracy:", metrics.accuracy_score(np.ravel(ytest), pStats))
+print("precision:", metrics.precision_score(ytest, pStats, average = "macro"))
+print("recall:", metrics.recall_score(ytest, pStats, average="macro"))
+print("kappa:", metrics.cohen_kappa_score(ytest, pStats))
 
 
 print("Everything has run :)")

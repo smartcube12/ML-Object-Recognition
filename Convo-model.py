@@ -1,6 +1,7 @@
 import sys
 import tensorflow as tf
 from keras import layers, datasets
+from sklearn import metrics
 import keras as keras
 import numpy as np
 import pandas as pd
@@ -57,15 +58,15 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 CNN = keras.Sequential([
     keras.layers.Input(shape=(32, 32, 3)),
 
-    keras.layers.Conv2D(256, (3,3), activation="relu"),
+    keras.layers.Conv2D(128, (3,3), activation="relu"), #test vlaue 16, real vlaue 128
     keras.layers.MaxPooling2D(),
 
-    keras.layers.Conv2D(512, (3,3), activation="relu"),
+    keras.layers.Conv2D(256, (3,3), activation="relu"), #test vlaue 32, real vlaue 256
     keras.layers.MaxPooling2D(),
 
     keras.layers.Flatten(),
 
-    keras.layers.Dense(256, activation="relu"),
+    keras.layers.Dense(128, activation="relu"), #test vlaue 16, real vlaue 128
     keras.layers.Dense(10, activation="softmax"),
 ])
 CNN.summary()
@@ -79,7 +80,7 @@ CNN.compile(
      metrics=["accuracy"],
  )
 
-CNN.fit(Xtrain, ytrain, batch_size=128, epochs=18, validation_split=0.2)
+CNN.fit(Xtrain, ytrain, batch_size=64, epochs=18, validation_split= 0.4) #test Batch vlaue 8, real vlaue 64. Real epochs 18
 # ^ should be all we need
 
 # Can do the below code to help with evaluation but we could honnestly try the code below that 
@@ -89,12 +90,21 @@ CNN.fit(Xtrain, ytrain, batch_size=128, epochs=18, validation_split=0.2)
 
 # -------Evaluating the model ------------ 
 
-results = CNN.evaluate(Xtest, ytest, batch_size=128)
+results = CNN.evaluate(Xtest, ytest, batch_size=64)
 print("Test loss, accuracy", results)
 predictions = CNN.predict(Xtest[:10])
+predictionsStats = CNN.predict(Xtest)
 predicted_classes = np.argmax(predictions, axis=1)
+pStats = np.argmax(predictionsStats, axis=1)
+ytestForMatrix = ytest.flatten()
 print("Predictions:", predicted_classes)
 print("Actual values:", ytest[:10]) #We probably wont have an actual values since we don't have labels for test
+confusionMatrix = metrics.confusion_matrix(ytestForMatrix, pStats, normalize="pred")
+print(confusionMatrix)
+print("accuracy:", metrics.accuracy_score(np.ravel(ytest), pStats))
+print("precision:", metrics.precision_score(ytest, pStats, average = "macro"))
+print("recall:", metrics.recall_score(ytest, pStats, average="macro"))
+print("kappa:", metrics.cohen_kappa_score(ytest, pStats))
 
 
 
