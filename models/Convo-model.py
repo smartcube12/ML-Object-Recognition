@@ -7,6 +7,7 @@ import keras as keras
 import numpy as np
 import pandas as pd
 import os
+import json
 os.environ["KERAS_BACKEND"] = "tensorflow"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 #here they would have scikit and import train_test_split i dont think we need it
@@ -25,6 +26,8 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1" #Silences the voices
 
 # dataset = tf.data.Dataset.from_tensor_slices((filepaths, labels))
 (Xtrain, ytrain), (Xtest, ytest) = tf.keras.datasets.cifar10.load_data() 
+ytrain = tf.keras.utils.to_categorical(ytrain, 10)
+ytest = tf.keras.utils.to_categorical(ytest, 10)
 #^ our data is premade so we might not even have to load it oursleves just laod from the library
 
 #print(trainCSV.head(10))  #Testing if w are reading training labels
@@ -77,11 +80,15 @@ CNN.summary()
 
 CNN.compile(
      optimizer = "adam",
-     loss = "SparseCategoricalCrossentropy",
-     metrics=["accuracy"],
+     loss = "CategoricalCrossentropy",
+     metrics=[
+        'accuracy',
+        'precision',
+        'recall'
+    ]
  )
 
-CNN.fit(Xtrain, ytrain, batch_size=64, epochs=1, validation_split= 0.4) #test Batch vlaue 8, real vlaue 64. Real epochs 18
+CNNModel = CNN.fit(Xtrain, ytrain, batch_size=64, epochs=18, validation_split= 0.4) #test Batch vlaue 8, real vlaue 64. Real epochs 18
 # ^ should be all we need
 
 # Can do the below code to help with evaluation but we could honnestly try the code below that 
@@ -91,21 +98,24 @@ CNN.fit(Xtrain, ytrain, batch_size=64, epochs=1, validation_split= 0.4) #test Ba
 
 # -------Evaluating the model ------------ 
 
+with open('output/history.json', 'w') as f:
+    json.dump(CNNModel.history, f)
+
 results = CNN.evaluate(Xtest, ytest, batch_size=64)
 print("Test loss, accuracy", results)
 predictions = CNN.predict(Xtest[:10])
 predictionsStats = CNN.predict(Xtest)
 predicted_classes = np.argmax(predictions, axis=1)
 pStats = np.argmax(predictionsStats, axis=1)
-ytestForMatrix = ytest.flatten()
+ytestForMatrix = np.argmax(ytest, axis=1)
 print("Predictions:", predicted_classes)
-print("Actual values:", ytest[:10]) #We probably wont have an actual values since we don't have labels for test
+print("Actual values:", ytestForMatrix[:10]) #We probably wont have an actual values since we don't have labels for test
 confusionMatrix = metrics.confusion_matrix(ytestForMatrix, pStats, normalize="pred")
 print("Confusion Matrix\n", confusionMatrix)
-print("accuracy:", metrics.accuracy_score(np.ravel(ytest), pStats))
-print("precision:", metrics.precision_score(ytest, pStats, average = "macro"))
-print("recall:", metrics.recall_score(ytest, pStats, average="macro"))
-print("kappa:", metrics.cohen_kappa_score(ytest, pStats))
+print("accuracy:", metrics.accuracy_score(np.ravel(ytestForMatrix), pStats))
+print("precision:", metrics.precision_score(ytestForMatrix, pStats, average = "macro"))
+print("recall:", metrics.recall_score(ytestForMatrix, pStats, average="macro"))
+print("kappa:", metrics.cohen_kappa_score(ytestForMatrix, pStats))
 
 
 acc = metrics.accuracy_score(ytestForMatrix, pStats)
@@ -114,8 +124,6 @@ se = math.sqrt((acc * (1 - acc)) / n)
 lower = acc - 1.96 * se
 upper = acc + 1.96 * se
 print(f"95% Confidence Interval: ({lower:.4f}, {upper:.4f})")
-
-
 
 
 print("Everything has run :)")
