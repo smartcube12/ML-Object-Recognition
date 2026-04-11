@@ -8,17 +8,14 @@ WORKDIR /app
 RUN pip install pandas numpy matplotlib keras tensorflow scikit-learn
 
 # Copy python scripts into Docker container
-#COPY utils.py /app/
-COPY Convo-model.py /app/  
-COPY Recurrent-model.py /app/  
 COPY possibly_better_labels.csv /app/  
 
 # Create directory for output
 RUN mkdir input
 RUN mkdir output
 
-# command to run python script
-#ENTRYPOINT ["python", "script.py"]
 # provide command line args
 #CMD [args]
 CMD python Convo-model.py && python Recurrent-model.py
+
+# docker run -v ./models:/app <container-name>
