@@ -64,7 +64,7 @@ RNNModel = RNN.fit(Xtrain, ytrain, batch_size=64, epochs=35, validation_split=0.
 
 # -------Evaluating the model ------------ 
 
-with open('output/RNNhistory.json', 'w') as f:
+with open('output/RNNhistoryB64E35L7.json', 'w') as f:
     json.dump(RNNModel.history, f)
 
 results = RNN.evaluate(Xtest, ytest, batch_size=64)
