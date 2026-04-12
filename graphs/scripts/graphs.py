@@ -2,24 +2,67 @@ import matplotlib.pyplot as plt
 import json
 import pandas as pd
 import numpy as np
-with open ('data/RNNhistoryB64E35L7.json', 'r') as file:
-    data = json.load(file)
-dataOneName = 'RNNhistoryB64E35L7'
-dataTwoName = 'CNNhistoryB64E18L7'
-toCompare = 'accuracy'
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+if(True):
+    dataOneName = 'CNNhistoryB64E20L9'
+    dataTwoName = 'CNNhistoryB64E18L7'
+    toCompare = 'val_accuracy'
 
-RNNdf = pd.read_json('data/'+ dataOneName + '.json')
-CNNdf = pd.read_json('data/' + dataTwoName + '.json')
+    RNNdf = pd.read_json('data/'+ dataOneName + '.json')
+    CNNdf = pd.read_json('data/' + dataTwoName + '.json')
 
-xRNN = range(1, len(RNNdf) + 1)
-xCNN = range(1, len(CNNdf) + 1)
+    xRNN = range(0, len(RNNdf))
+    xCNN = range(0, len(CNNdf))
 
-plt.plot(xRNN, RNNdf[toCompare], label='RNN')
-plt.plot(xCNN, CNNdf[toCompare], label='CNN')
+    plt.plot(xRNN, RNNdf[toCompare], label='CNN with dropout')
+    plt.plot(xCNN, CNNdf[toCompare], label='CNN')
 
-plt.xlabel('epoch')
-plt.ylabel('accuracy')
-plt.title('CNN vs RNN accuracy over time')
-plt.legend()
+    plt.xlabel('epoch')
+    plt.ylabel('accuracy')
+    plt.title('CNN with/without dropout validation accuracy')
+    plt.legend()
 
-plt.savefig(dataOneName + 'Vs' + dataTwoName + str.capitalize(toCompare))
+    outputOne = dataOneName.replace('history', '')
+    outputTwo = dataTwoName.replace('history', '')
+    plt.savefig(outputOne + 'Vs' + outputTwo + str.capitalize(toCompare))
+else:
+    """
+    # RNN confusion matrix
+    cm = np.array([
+    [0.61954262, 0.02213667, 0.07939054, 0.03012048, 0.0323475,  0.01576355, 0.01580699, 0.04140787, 0.11694747, 0.04176904],
+    [0.02390852, 0.64196343, 0.02245389, 0.02710843, 0.00462107, 0.02167488, 0.01331115, 0.01966874, 0.05054509, 0.18550369],
+    [0.07380457, 0.02021174, 0.34963913, 0.07680723, 0.15434381, 0.07192118, 0.078203,   0.04968944, 0.02576809, 0.01597052],
+    [0.02079002, 0.02502406, 0.1074579,  0.375,      0.05914972, 0.24137931, 0.13394343, 0.05590062, 0.02180377, 0.03071253],
+    [0.04365904, 0.0105871,  0.15076183, 0.05421687, 0.40110906, 0.0591133,  0.10232945, 0.07867495, 0.02180377, 0.00982801],
+    [0.01559252, 0.00866218, 0.10264635, 0.21536145, 0.07948244, 0.40197044, 0.08485857, 0.08488613, 0.02180377, 0.00614251],
+    [0.00727651, 0.01347449, 0.06736167, 0.07379518, 0.12661738, 0.05517241, 0.49251248, 0.0300207,  0.0148662,  0.02088452],
+    [0.02598753, 0.01347449, 0.06655974, 0.05722892, 0.1025878,  0.09162562, 0.03410982, 0.58488613, 0.0148662,  0.01842752],
+    [0.13617464, 0.0587103,  0.02245389, 0.01807229, 0.02772643, 0.02167488, 0.01747088, 0.01345756, 0.6333003,  0.05282555],
+    [0.03326403, 0.18575553, 0.03127506, 0.07228916, 0.01201479, 0.01970443, 0.02745424, 0.04140787, 0.07829534, 0.61793612]
+    ]) 
+    """
+    # CNN with dropout confusion matrix
+    cm = np.array ([
+    [0.72601156, 0.02395833, 0.08121827, 0.03064699, 0.03843009, 0.00979192,
+    0.01273345, 0.02512077, 0.10390848, 0.0367428],
+    [0.02080925, 0.81145833, 0.00609137, 0.00908059, 0.00899428, 0.00611995,
+    0.01612903, 0.01062802, 0.0343184, 0.10625621],
+    [0.0716763, 0.01145833, 0.54619289, 0.07264472, 0.08830744, 0.08078335,
+    0.06960951, 0.03478261, 0.01811249, 0.01390268],
+    [0.01965318, 0.015625, 0.08832487, 0.45402951, 0.10139002, 0.1750306,
+    0.08658744, 0.06376812, 0.02192564, 0.02284012],
+    [0.01849711, 0.0, 0.07715736, 0.06583428, 0.52248569, 0.03304774,
+    0.06791171, 0.07826087, 0.0171592, 0.00496524],
+    [0.01040462, 0.00416667, 0.08730964, 0.20658343, 0.06623058, 0.59363525,
+    0.05008489, 0.06859903, 0.01143947, 0.01092354],
+    [0.00346821, 0.00729167, 0.04162437, 0.06810443, 0.04987735, 0.02815177,
+    0.66129032, 0.01256039, 0.00667302, 0.00595829],
+    [0.00924855, 0.003125, 0.04263959, 0.05675369, 0.10139002, 0.05752754,
+    0.01273345, 0.66763285, 0.00381316, 0.01588878],
+    [0.08208092, 0.028125, 0.01725888, 0.0261067, 0.01471791, 0.00856793,
+    0.01273345, 0.00869565, 0.7435653, 0.03277061],
+    [0.03815029, 0.09479167, 0.01218274, 0.01021566, 0.00817661, 0.00734394,
+    0.01018676, 0.02995169, 0.03908484, 0.74975174]
+    ])
+    plot = ConfusionMatrixDisplay(cm).plot()
+    plt.savefig("confusionMatrix.png")

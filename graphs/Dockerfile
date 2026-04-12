@@ -5,7 +5,7 @@ FROM python:3.12.13
 WORKDIR /app
 
 # Use pip to install required python packages
-RUN pip install pandas numpy matplotlib
+RUN pip install pandas numpy matplotlib scikit-learn
 
 # Create directory for output
 RUN mkdir input

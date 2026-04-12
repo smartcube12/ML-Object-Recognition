@@ -62,22 +62,15 @@ ytest = tf.keras.utils.to_categorical(ytest, 10)
 CNN = keras.Sequential([
     keras.layers.Input(shape=(32, 32, 3)),
 
-    keras.layers.Conv2D(128, (3,3), use_bias=False),
-    keras.layers.BatchNormalization(),
-    keras.layers.Activation("relu"),
+    keras.layers.Conv2D(128, (3,3), activation="relu"), #test vlaue 16, real vlaue 128
     keras.layers.MaxPooling2D(),
 
-    keras.layers.Conv2D(256, (3,3), use_bias=False),
-    keras.layers.BatchNormalization(),
-    keras.layers.Activation("relu"),
+    keras.layers.Conv2D(256, (3,3), activation="relu"), #test vlaue 32, real vlaue 256
     keras.layers.MaxPooling2D(),
 
     keras.layers.Flatten(),
 
-    keras.layers.Dense(128, use_bias=False),
-    keras.layers.BatchNormalization(),
-    keras.layers.Activation("relu"),
-    keras.layers.Dropout(0.3), # Dropout layers to help with overfitting -Asher
+    keras.layers.Dense(128, activation="relu"), #test vlaue 16, real vlaue 128
     keras.layers.Dense(10, activation="softmax"),
 ])
 CNN.summary()
